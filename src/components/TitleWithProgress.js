@@ -26,6 +26,6 @@ TitleWithProgress.propTypes = {
 TitleWithProgress.defaultProps = {
   title: "Title",
   progress: 33,
-  mt: 0,
-  mb: 0,
+  mt: 2,
+  mb: 2,
 };
