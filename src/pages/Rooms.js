@@ -9,16 +9,19 @@ export default function Rooms() {
     <>
       <Navbar />
       <Container maxWidth="false" sx={{ paddingTop: "64px" }}>
-        <TitleWithProgress title="Choose a room" progress={33} mt={2} mb={1} />
+        <TitleWithProgress title="Choose a room" progress={33} mt={2} mb={2} />
 
         <Grid container spacing={2}>
-          <Grid item xl={4}>
+          <Grid item xl={3}>
             <RoomCard />
           </Grid>
-          <Grid item xl={4}>
+          <Grid item xl={3}>
             <RoomCard />
           </Grid>
-          <Grid item xl={4}>
+          <Grid item xl={3}>
+            <RoomCard />
+          </Grid>
+          <Grid item xl={3}>
             <RoomCard />
           </Grid>
         </Grid>
