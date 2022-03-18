@@ -2,9 +2,10 @@ import { Button, Card, MenuItem, Stack, TextField } from "@mui/material";
 import DateAdapter from "@mui/lab/AdapterMoment";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import moment from "moment";
-import "./App.css";
 import { DesktopDatePicker } from "@mui/lab";
 import { useState } from "react";
+import { Box } from "@mui/system";
+import HomeImg from "./images/home.jpg";
 
 const guestNums = [
   {
@@ -47,8 +48,24 @@ function App() {
   const [guests, setGuests] = useState("1");
 
   return (
-    <div className="contHome">
-      <Card className="cardSearch">
+    <Box
+      sx={{
+        height: "100vh",
+
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+
+        backgroundImage: `url(${HomeImg})`,
+        backgroundPosition: "center",
+      }}
+    >
+      <Card
+        sx={{
+          width: "80%",
+          padding: "20px",
+        }}
+      >
         <LocalizationProvider dateAdapter={DateAdapter}>
           <Stack spacing={2} direction="row">
             <DesktopDatePicker
@@ -76,7 +93,7 @@ function App() {
             />
 
             <TextField
-              className="inputGuests"
+              sx={{ width: "200px" }}
               label="Guests"
               select
               value={guests}
@@ -91,13 +108,13 @@ function App() {
               ))}
             </TextField>
 
-            <Button className="btnSearch" variant="contained">
+            <Button sx={{ width: "200px" }} variant="contained">
               Search
             </Button>
           </Stack>
         </LocalizationProvider>
       </Card>
-    </div>
+    </Box>
   );
 }
 
