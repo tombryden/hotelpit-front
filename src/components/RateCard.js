@@ -1,10 +1,13 @@
 import { Button, Card, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import PropTypes from "prop-types";
+import { useNavigate } from "react-router-dom";
 
 export default function RateCard(props) {
   // ppn = price per night
   const { rate, description, ppn } = props;
+
+  const navigate = useNavigate();
 
   return (
     <Card>
@@ -28,7 +31,14 @@ export default function RateCard(props) {
           </Typography>
           <Typography>£300 total</Typography>
 
-          <Button variant="contained">Book for £300</Button>
+          <Button
+            variant="contained"
+            onClick={() => {
+              navigate("/payment");
+            }}
+          >
+            Book for £300
+          </Button>
         </Box>
       </Box>
     </Card>
