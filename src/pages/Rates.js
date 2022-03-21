@@ -10,8 +10,31 @@ export default function Rates() {
       <Navbar />
       <Container maxWidth="false" sx={{ paddingTop: "64px" }}>
         <TitleWithProgress title="Choose a rate" progress={66} />
-        <Stack>
-          <RateCard />
+
+        <Stack spacing={2}>
+          <RateCard
+            rate="Flexible"
+            description="Cancel up to one day before check in"
+            ppn={100}
+          />
+
+          <RateCard
+            rate="Flexible"
+            description="Cancel up to one day before check in"
+            ppn={100}
+          />
+
+          <RateCard
+            rate="Flexible"
+            description="Cancel up to one day before check in"
+            ppn={100}
+          />
+
+          <RateCard
+            rate="Flexible"
+            description="Cancel up to one day before check in"
+            ppn={100}
+          />
         </Stack>
       </Container>
     </>
