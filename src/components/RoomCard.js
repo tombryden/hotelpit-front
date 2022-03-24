@@ -1,11 +1,14 @@
 import { Button, Card, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { useNavigate } from "react-router-dom";
+import PropTypes from "prop-types";
 
 import HomeImg from "../images/home.jpg";
 import "../index.css";
 
-function RoomCard() {
+function RoomCard(props) {
+  const { name, description, basePrice } = props;
+
   const navigate = useNavigate();
 
   return (
@@ -28,10 +31,10 @@ function RoomCard() {
           }}
         >
           <Typography variant="h5" component="h1">
-            Ultimate Duluxe Suite
+            {name}
           </Typography>
 
-          <Typography mb={2}>A brief description about the room</Typography>
+          <Typography mb={2}>{description}</Typography>
 
           <Button
             variant="contained"
@@ -41,12 +44,25 @@ function RoomCard() {
               navigate("/details");
             }}
           >
-            Book for £80/night
+            Book from £{basePrice}/night
           </Button>
         </Box>
       </Box>
     </Card>
   );
 }
+
+// prop types
+RoomCard.propTypes = {
+  name: PropTypes.string,
+  description: PropTypes.string,
+  basePrice: PropTypes.string,
+};
+
+RoomCard.defaultProps = {
+  name: "Example Room Name",
+  description: "Example room description",
+  basePrice: "99.99",
+};
 
 export default RoomCard;
