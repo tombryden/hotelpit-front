@@ -16,16 +16,6 @@ function getAllRooms(setRooms) {
       console.log(error);
     }
   );
-
-  // axios
-  //   .get("/room")
-  //   .then((response) => {
-  //     console.log(response);
-  //     setRooms(response.data);
-  //   })
-  //   .error((err) => {
-  //     console.log(err);
-  //   });
 }
 
 export default function Rooms() {
@@ -46,6 +36,7 @@ export default function Rooms() {
           {rooms.map((room) => (
             <Grid item xl={3} key={room.id}>
               <RoomCard
+                roomid={room.id}
                 name={room.name}
                 description={room.description}
                 basePrice={room.basePrice}

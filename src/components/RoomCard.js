@@ -1,13 +1,13 @@
 import { Button, Card, Typography } from "@mui/material";
 import { Box } from "@mui/system";
-import { useNavigate } from "react-router-dom";
+import { createSearchParams, useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 
 import HomeImg from "../images/home.jpg";
 import "../index.css";
 
 function RoomCard(props) {
-  const { name, description, basePrice } = props;
+  const { roomid, name, description, basePrice } = props;
 
   const navigate = useNavigate();
 
@@ -41,7 +41,10 @@ function RoomCard(props) {
             sx={{ alignSelf: "center" }}
             size="large"
             onClick={() => {
-              navigate("/details");
+              navigate({
+                pathname: "/rates",
+                search: createSearchParams({ roomid }).toString(),
+              });
             }}
           >
             Book from £{basePrice}/night
@@ -54,12 +57,14 @@ function RoomCard(props) {
 
 // prop types
 RoomCard.propTypes = {
+  roomid: PropTypes.number,
   name: PropTypes.string,
   description: PropTypes.string,
   basePrice: PropTypes.string,
 };
 
 RoomCard.defaultProps = {
+  roomid: 1,
   name: "Example Room Name",
   description: "Example room description",
   basePrice: "99.99",
