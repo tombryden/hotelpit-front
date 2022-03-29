@@ -2,10 +2,12 @@ import { Container, Stack } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import axios from "axios";
+import { Box } from "@mui/system";
 
 import Navbar from "../components/Navbar";
 import RateCard from "../components/RateCard";
 import TitleWithProgress from "../components/TitleWithProgress";
+import BookingProgress from "../components/BookingProgress";
 
 // FUNCTIONS
 function getRatesForRoom(roomid, setRates) {
@@ -37,6 +39,7 @@ export default function Rates() {
       getRatesForRoom(roomid, setRates);
     } else {
       // display error
+      console.log("error");
     }
   }, [searchParams]);
 
@@ -45,41 +48,24 @@ export default function Rates() {
       <Navbar />
       <Container maxWidth="false" sx={{ paddingTop: "64px" }}>
         <TitleWithProgress title="Choose a rate" progress={66} />
+        <Box sx={{ display: "flex", gap: "100px" }}>
+          <Box sx={{ flex: "2" }}>
+            <Stack spacing={2}>
+              {rates.map((rate) => (
+                <RateCard
+                  key={rate.id}
+                  rate={rate.name}
+                  description={rate.description}
+                  ppn={rate.multiplier}
+                />
+              ))}
+            </Stack>
+          </Box>
 
-        <Stack spacing={2}>
-          {rates.map((rate) => (
-            <RateCard
-              key={rate.id}
-              rate={rate.name}
-              description={rate.description}
-              ppn={rate.multiplier}
-            />
-          ))}
-
-          {/* <RateCard
-            rate="Flexible"
-            description="Cancel up to one day before check in"
-            ppn={100}
-          />
-
-          <RateCard
-            rate="Flexible"
-            description="Cancel up to one day before check in"
-            ppn={100}
-          />
-
-          <RateCard
-            rate="Flexible"
-            description="Cancel up to one day before check in"
-            ppn={100}
-          />
-
-          <RateCard
-            rate="Flexible"
-            description="Cancel up to one day before check in"
-            ppn={100}
-          /> */}
-        </Stack>
+          <Box sx={{ flex: "1" }}>
+            <BookingProgress />
+          </Box>
+        </Box>
       </Container>
     </>
   );
