@@ -5,7 +5,7 @@ import moment from "moment";
 import { DesktopDatePicker } from "@mui/lab";
 import { useState } from "react";
 import { Box } from "@mui/system";
-import { useNavigate } from "react-router-dom";
+import { createSearchParams, useNavigate } from "react-router-dom";
 
 import HomeImg from "../images/home.jpg";
 import Navbar from "../components/Navbar";
@@ -120,7 +120,10 @@ function Home() {
                 sx={{ width: "200px" }}
                 variant="contained"
                 onClick={() => {
-                  navigate("/rooms");
+                  navigate({
+                    pathname: "/rooms",
+                    search: createSearchParams({ guests }).toString(),
+                  });
                 }}
               >
                 Search

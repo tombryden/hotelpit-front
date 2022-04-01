@@ -1,14 +1,15 @@
 import { Container, Grid } from "@mui/material";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 
 import Navbar from "../components/Navbar";
 import RoomCard from "../components/RoomCard";
 import TitleWithProgress from "../components/TitleWithProgress";
 
 // FUNCTIONS
-function getAllRooms(setRooms) {
-  axios.get("/room", null).then(
+function getAllRooms(setRooms, guests) {
+  axios.get("/room", { params: { guests } }).then(
     (response) => {
       setRooms(response.data);
     },
@@ -22,9 +23,19 @@ export default function Rooms() {
   // state for rooms
   const [rooms, setRooms] = useState([]);
 
+  // get guests from query params in url
+  const [searchParams] = useSearchParams();
+  const guests = searchParams.get("guests");
+
   useEffect(() => {
-    getAllRooms(setRooms);
-  }, []);
+    // query rates for room if not null
+    if (guests !== null) {
+      getAllRooms(setRooms, guests);
+    } else {
+      // display error
+      console.log("error");
+    }
+  }, [searchParams]);
 
   return (
     <>
