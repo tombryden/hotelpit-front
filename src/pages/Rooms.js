@@ -8,8 +8,8 @@ import RoomCard from "../components/RoomCard";
 import TitleWithProgress from "../components/TitleWithProgress";
 
 // FUNCTIONS
-function getAllRooms(setRooms, guests) {
-  axios.get("/room", { params: { guests } }).then(
+function getAllRooms(setRooms, guests, checkin, checkout) {
+  axios.get("/room", { params: { guests, checkin, checkout } }).then(
     (response) => {
       setRooms(response.data);
     },
@@ -23,14 +23,16 @@ export default function Rooms() {
   // state for rooms
   const [rooms, setRooms] = useState([]);
 
-  // get guests from query params in url
+  // get guests., checkin, checkout from query params in url
   const [searchParams] = useSearchParams();
   const guests = searchParams.get("guests");
+  const checkin = searchParams.get("checkin");
+  const checkout = searchParams.get("checkout");
 
   useEffect(() => {
     // query rates for room if not null
-    if (guests !== null) {
-      getAllRooms(setRooms, guests);
+    if (guests !== null && checkin !== null && checkout !== null) {
+      getAllRooms(setRooms, guests, checkin, checkout);
     } else {
       // display error
       console.log("error");

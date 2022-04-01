@@ -39,6 +39,10 @@ function addDaysToDate(date, days) {
   return newDate;
 }
 
+function convertDateToReqStr(date) {
+  return moment(date).format("YYYYMMDD");
+}
+
 // MAIN RENDER
 function Home() {
   // state for check in / out picker
@@ -122,7 +126,11 @@ function Home() {
                 onClick={() => {
                   navigate({
                     pathname: "/rooms",
-                    search: createSearchParams({ guests }).toString(),
+                    search: createSearchParams({
+                      guests,
+                      checkin: convertDateToReqStr(checkIn),
+                      checkout: convertDateToReqStr(checkOut),
+                    }).toString(),
                   });
                 }}
               >
