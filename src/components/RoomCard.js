@@ -7,7 +7,12 @@ import HomeImg from "../images/home.jpg";
 import "../index.css";
 
 function RoomCard(props) {
-  const { roomid, name, description, basePrice } = props;
+  const { roomid, name, description, basePrice, searchParams } = props;
+
+  // get search params passed from parent rooms page
+  const guests = searchParams.get("guests");
+  const checkin = searchParams.get("checkin");
+  const checkout = searchParams.get("checkout");
 
   const navigate = useNavigate();
 
@@ -43,7 +48,12 @@ function RoomCard(props) {
             onClick={() => {
               navigate({
                 pathname: "/rates",
-                search: createSearchParams({ roomid }).toString(),
+                search: createSearchParams({
+                  guests,
+                  checkin,
+                  checkout,
+                  roomid,
+                }).toString(),
               });
             }}
           >
@@ -61,6 +71,7 @@ RoomCard.propTypes = {
   name: PropTypes.string,
   description: PropTypes.string,
   basePrice: PropTypes.string,
+  searchParams: PropTypes.instanceOf(Object).isRequired,
 };
 
 RoomCard.defaultProps = {
