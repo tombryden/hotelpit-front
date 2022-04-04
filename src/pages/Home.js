@@ -9,6 +9,7 @@ import { createSearchParams, useNavigate } from "react-router-dom";
 
 import HomeImg from "../images/home.jpg";
 import Navbar from "../components/Navbar";
+import useAuthentication from "../hooks/useAuthentication";
 
 const guestNums = [
   {
@@ -57,9 +58,16 @@ function Home() {
   // navigation hook
   const navigate = useNavigate();
 
+  // authentication hook
+  const [authorised, logout, refreshAuthentication] = useAuthentication();
+
   return (
     <>
-      <Navbar />
+      <Navbar
+        authorised={authorised}
+        logout={logout}
+        refreshAuthentication={refreshAuthentication}
+      />
       <Box
         sx={{
           height: "100vh",

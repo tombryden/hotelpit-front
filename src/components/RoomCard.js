@@ -1,13 +1,15 @@
-import { Button, Card, Typography } from "@mui/material";
+import { Button, Card, Tooltip, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { createSearchParams, useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
+import { useEffect } from "react";
 
 import HomeImg from "../images/home.jpg";
 import "../index.css";
 
 function RoomCard(props) {
-  const { roomid, name, description, basePrice, searchParams } = props;
+  const { roomid, name, description, basePrice, searchParams, authorised } =
+    props;
 
   // get search params passed from parent rooms page
   const guests = searchParams.get("guests");
@@ -15,6 +17,10 @@ function RoomCard(props) {
   const checkout = searchParams.get("checkout");
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    console.log("test");
+  }, [authorised]);
 
   return (
     <Card>
@@ -41,24 +47,34 @@ function RoomCard(props) {
 
           <Typography mb={2}>{description}</Typography>
 
-          <Button
-            variant="contained"
-            sx={{ alignSelf: "center" }}
-            size="large"
-            onClick={() => {
-              navigate({
-                pathname: "/rates",
-                search: createSearchParams({
-                  guests,
-                  checkin,
-                  checkout,
-                  roomid,
-                }).toString(),
-              });
-            }}
+          <Tooltip
+            title={
+              !authorised
+                ? "Please log in to continue"
+                : "Room will be reserved for 10 minutes"
+            }
           >
-            Book from £{basePrice}/night
-          </Button>
+            <Box component="span" sx={{ alignSelf: "center" }}>
+              <Button
+                disabled={!authorised}
+                variant="contained"
+                size="large"
+                onClick={() => {
+                  navigate({
+                    pathname: "/rates",
+                    search: createSearchParams({
+                      guests,
+                      checkin,
+                      checkout,
+                      roomid,
+                    }).toString(),
+                  });
+                }}
+              >
+                Book from £{basePrice}/night
+              </Button>
+            </Box>
+          </Tooltip>
         </Box>
       </Box>
     </Card>
@@ -72,6 +88,7 @@ RoomCard.propTypes = {
   description: PropTypes.string,
   basePrice: PropTypes.string,
   searchParams: PropTypes.instanceOf(Object).isRequired,
+  authorised: PropTypes.bool.isRequired,
 };
 
 RoomCard.defaultProps = {

@@ -1,4 +1,4 @@
-import { Container, Grid } from "@mui/material";
+import { Alert, Container, Grid, Snackbar } from "@mui/material";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
@@ -6,6 +6,7 @@ import { useSearchParams } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import RoomCard from "../components/RoomCard";
 import TitleWithProgress from "../components/TitleWithProgress";
+import useAuthentication from "../hooks/useAuthentication";
 
 // FUNCTIONS
 function getAllRooms(setRooms, guests, checkin, checkout) {
@@ -19,6 +20,12 @@ function getAllRooms(setRooms, guests, checkin, checkout) {
   );
 }
 
+function closeSnackbar(setSnackOpen, event, reason) {
+  if (reason === "clickaway") return;
+
+  setSnackOpen(false);
+}
+
 export default function Rooms() {
   // state for rooms
   const [rooms, setRooms] = useState([]);
@@ -28,6 +35,12 @@ export default function Rooms() {
   const guests = searchParams.get("guests");
   const checkin = searchParams.get("checkin");
   const checkout = searchParams.get("checkout");
+
+  // state for snackbar
+  const [snackOpen, setSnackOpen] = useState(false);
+
+  // authentication hook
+  const [authorised, logout, refreshAuthentication] = useAuthentication();
 
   useEffect(() => {
     // query rates for room if not null
@@ -39,9 +52,36 @@ export default function Rooms() {
     }
   }, [searchParams]);
 
+  // on authorised update set snackbar to open or closed
+  useEffect(() => {
+    setSnackOpen(!authorised);
+  }, [authorised]);
+
   return (
     <>
-      <Navbar />
+      <Navbar
+        authorised={authorised}
+        logout={logout}
+        refreshAuthentication={refreshAuthentication}
+      />
+      <Snackbar
+        // anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        open={snackOpen}
+        autoHideDuration={10000}
+        onClose={(event, reason) => {
+          closeSnackbar(setSnackOpen, event, reason);
+        }}
+      >
+        <Alert
+          severity="warning"
+          onClose={(event, reason) => {
+            closeSnackbar(setSnackOpen, event, reason);
+          }}
+        >
+          You must log in to reserve &amp; book a room
+        </Alert>
+      </Snackbar>
+
       <Container maxWidth="false" sx={{ paddingTop: "64px" }}>
         <TitleWithProgress title="Choose a room" progress={33} mt={2} mb={2} />
 
@@ -54,6 +94,7 @@ export default function Rooms() {
                 description={room.description}
                 basePrice={room.basePrice}
                 searchParams={searchParams}
+                authorised={authorised}
               />
             </Grid>
           ))}

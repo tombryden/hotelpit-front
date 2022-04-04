@@ -7,7 +7,7 @@ import { useState } from "react";
 import LoginIcon from "@mui/icons-material/Login";
 
 // FUNCTIONS
-function signIn(username, password, setBtnLoading, setAuthorisedOptions) {
+function signIn(username, password, setBtnLoading, refreshAuthentication) {
   setBtnLoading(true);
 
   axios
@@ -19,8 +19,8 @@ function signIn(username, password, setBtnLoading, setAuthorisedOptions) {
         if (response.data.message === "Credentials incorrect") {
           // invalid login
         } else {
-          // login successful close window and display avatars
-          setAuthorisedOptions();
+          // login successful refresh authentication
+          refreshAuthentication();
         }
       },
       (error) => {
@@ -33,7 +33,7 @@ function signIn(username, password, setBtnLoading, setAuthorisedOptions) {
 }
 
 export default function SignInCard(props) {
-  const { visible, setAuthorisedOptions } = props;
+  const { visible, refreshAuthentication } = props;
 
   // state for text input
   const [username, setUsername] = useState("");
@@ -73,7 +73,12 @@ export default function SignInCard(props) {
             <LoadingButton
               variant="contained"
               onClick={() => {
-                signIn(username, password, setBtnLoading, setAuthorisedOptions);
+                signIn(
+                  username,
+                  password,
+                  setBtnLoading,
+                  refreshAuthentication
+                );
               }}
               loading={btnLoading}
               //   loadingPosition="start"
@@ -91,7 +96,7 @@ export default function SignInCard(props) {
 // prop types
 SignInCard.propTypes = {
   visible: PropTypes.bool,
-  setAuthorisedOptions: PropTypes.func.isRequired,
+  refreshAuthentication: PropTypes.func.isRequired,
 };
 
 SignInCard.defaultProps = {

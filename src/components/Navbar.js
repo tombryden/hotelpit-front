@@ -10,45 +10,16 @@ import {
   Typography,
 } from "@mui/material";
 import { Box } from "@mui/system";
-import axios from "axios";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import PropTypes from "prop-types";
 import SignInCard from "./SignInCard";
 
-// FUNCTIONS
-function setAuthorisedOptions(setAuthorised) {
-  axios.get("/user/auth").then(
-    () => {
-      // user is authorised as 200 status
-      setAuthorised(true);
-    },
-    () => {
-      // user not authorised.. 401 unauth or error
-      setAuthorised(false);
-    }
-  );
-}
-
-function logout(setAuthorised) {
-  axios.post("/user/logout").then(
-    () => {
-      setAuthorisedOptions(setAuthorised);
-    },
-    () => {
-      setAuthorisedOptions(setAuthorised);
-    }
-  );
-}
-
-export default function Navbar() {
+export default function Navbar(props) {
   const navigate = useNavigate();
 
-  // state for if user is logged in
-  const [authorised, setAuthorised] = useState(false);
-  useEffect(() => {
-    // on comp load check if user is authorised and set state
-    setAuthorisedOptions(setAuthorised);
-  }, []);
+  // custom authentication hook
+  const { authorised, logout, refreshAuthentication } = props;
 
   // state for sign in card visibility
   const [signVisible, setSignVisible] = useState(false);
@@ -84,9 +55,7 @@ export default function Navbar() {
             </Typography>
             <SignInCard
               visible={signVisible}
-              setAuthorisedOptions={() => {
-                setAuthorisedOptions(setAuthorised);
-              }}
+              refreshAuthentication={refreshAuthentication}
             />
           </Box>
         ) : (
@@ -120,7 +89,7 @@ export default function Navbar() {
               <MenuItem
                 onClick={() => {
                   setAnchorEl(null);
-                  logout(setAuthorised);
+                  logout();
                 }}
               >
                 Logout
@@ -132,3 +101,9 @@ export default function Navbar() {
     </AppBar>
   );
 }
+
+Navbar.propTypes = {
+  authorised: PropTypes.bool.isRequired,
+  logout: PropTypes.func.isRequired,
+  refreshAuthentication: PropTypes.func.isRequired,
+};
