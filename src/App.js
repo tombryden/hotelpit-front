@@ -10,6 +10,7 @@ import Login from "./pages/Login";
 
 function App() {
   axios.defaults.baseURL = "http://localhost:8080/api";
+  axios.defaults.withCredentials = true;
 
   return (
     <Router>

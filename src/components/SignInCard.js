@@ -7,7 +7,7 @@ import { useState } from "react";
 import LoginIcon from "@mui/icons-material/Login";
 
 // FUNCTIONS
-function signIn(username, password, setBtnLoading) {
+function signIn(username, password, setBtnLoading, setAuthorisedOptions) {
   setBtnLoading(true);
 
   axios
@@ -20,6 +20,7 @@ function signIn(username, password, setBtnLoading) {
           // invalid login
         } else {
           // login successful close window and display avatars
+          setAuthorisedOptions();
         }
       },
       (error) => {
@@ -32,7 +33,7 @@ function signIn(username, password, setBtnLoading) {
 }
 
 export default function SignInCard(props) {
-  const { visible } = props;
+  const { visible, setAuthorisedOptions } = props;
 
   // state for text input
   const [username, setUsername] = useState("");
@@ -72,7 +73,7 @@ export default function SignInCard(props) {
             <LoadingButton
               variant="contained"
               onClick={() => {
-                signIn(username, password, setBtnLoading);
+                signIn(username, password, setBtnLoading, setAuthorisedOptions);
               }}
               loading={btnLoading}
               //   loadingPosition="start"
@@ -90,6 +91,7 @@ export default function SignInCard(props) {
 // prop types
 SignInCard.propTypes = {
   visible: PropTypes.bool,
+  setAuthorisedOptions: PropTypes.func.isRequired,
 };
 
 SignInCard.defaultProps = {
