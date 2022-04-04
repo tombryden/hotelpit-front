@@ -53,6 +53,7 @@ export default function Rooms() {
                 name={room.name}
                 description={room.description}
                 basePrice={room.basePrice}
+                searchParams={searchParams}
               />
             </Grid>
           ))}
