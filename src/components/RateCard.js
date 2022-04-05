@@ -5,9 +5,11 @@ import { useNavigate } from "react-router-dom";
 
 export default function RateCard(props) {
   // ppn = price per night
-  const { rate, description, ppn, roomBasePrice } = props;
+  const { rate, description, ppn, roomBasePrice, nights } = props;
 
-  const finalPrice = (roomBasePrice * ppn).toFixed(2);
+  const finalPricePerNight = (roomBasePrice * ppn).toFixed(2);
+
+  const finalPriceTotal = finalPricePerNight * nights;
 
   const navigate = useNavigate();
 
@@ -29,9 +31,12 @@ export default function RateCard(props) {
 
         <Box ml="auto">
           <Typography variant="h5" component="p">
-            <strong>£{finalPrice} / night</strong>
+            <strong>£{finalPricePerNight} / night</strong>
           </Typography>
-          <Typography>£xxx total</Typography>
+          <Typography>
+            {nights}x {nights === 1 ? "night" : "nights"} = £{finalPriceTotal}{" "}
+            total
+          </Typography>
 
           <Button
             variant="contained"
@@ -39,7 +44,7 @@ export default function RateCard(props) {
               navigate("/payment");
             }}
           >
-            Book for £xxx
+            Book for £{finalPriceTotal}
           </Button>
         </Box>
       </Box>
@@ -53,6 +58,7 @@ RateCard.propTypes = {
   description: PropTypes.string,
   ppn: PropTypes.number,
   roomBasePrice: PropTypes.string,
+  nights: PropTypes.number,
 };
 
 RateCard.defaultProps = {
@@ -60,4 +66,5 @@ RateCard.defaultProps = {
   description: "Brief description about rate",
   ppn: 0,
   roomBasePrice: "0.00",
+  nights: 0,
 };
