@@ -8,6 +8,7 @@ import Navbar from "../components/Navbar";
 import RateCard from "../components/RateCard";
 import TitleWithProgress from "../components/TitleWithProgress";
 import BookingProgress from "../components/BookingProgress";
+import useAuthentication from "../hooks/useAuthentication";
 
 // FUNCTIONS
 function getBookingInfo(bookingID, setBooking) {
@@ -34,6 +35,9 @@ export default function Rates() {
   // state for booking
   const [booking, setBooking] = useState();
 
+  // authentication hook
+  const [authorised, logout, refreshAuthentication] = useAuthentication();
+
   useEffect(() => {
     // query rates for room if not null
     if (bookingid !== null) {
@@ -46,14 +50,18 @@ export default function Rates() {
 
   return (
     <>
-      <Navbar />
+      <Navbar
+        authorised={authorised}
+        logout={logout}
+        refreshAuthentication={refreshAuthentication}
+      />
       <Container maxWidth="false" sx={{ paddingTop: "64px" }}>
         <TitleWithProgress title="Choose a rate" progress={66} />
         <Box sx={{ display: "flex", gap: "100px" }}>
           <Box sx={{ flex: "2" }}>
             <Stack spacing={2}>
               {booking &&
-                booking.rates.map((rate) => (
+                booking.room.rates.map((rate) => (
                   <RateCard
                     key={rate.id}
                     rate={rate.name}
