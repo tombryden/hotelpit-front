@@ -1,11 +1,48 @@
-import { Button, Card, Tooltip, Typography } from "@mui/material";
+import { Card, Tooltip, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { createSearchParams, useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
-import { useEffect } from "react";
+import { useState } from "react";
+import { LoadingButton } from "@mui/lab";
+import axios from "axios";
 
 import HomeImg from "../images/home.jpg";
 import "../index.css";
+
+// FUNCTIONS
+function reserveRoomAndRedirect(
+  roomID,
+  checkInDate,
+  checkOutDate,
+  totalGuests,
+  navigate,
+  setBtnLoading
+) {
+  setBtnLoading(true);
+
+  axios
+    .post("/booking/reserve", {
+      roomID,
+      checkInDate,
+      checkOutDate,
+      totalGuests,
+    })
+    .then(
+      (response) => {
+        // reservation created successfully.. get ID and redirect
+        navigate({
+          pathname: "/rates",
+          search: createSearchParams({
+            booking: response.data.id,
+          }).toString(),
+        });
+      },
+      (error) => {
+        setBtnLoading(false);
+        console.log(error);
+      }
+    );
+}
 
 function RoomCard(props) {
   const { roomid, name, description, basePrice, searchParams, authorised } =
@@ -16,11 +53,10 @@ function RoomCard(props) {
   const checkin = searchParams.get("checkin");
   const checkout = searchParams.get("checkout");
 
-  const navigate = useNavigate();
+  // state for button loading
+  const [btnLoading, setBtnLoading] = useState(false);
 
-  useEffect(() => {
-    console.log("test");
-  }, [authorised]);
+  const navigate = useNavigate();
 
   return (
     <Card>
@@ -55,24 +91,24 @@ function RoomCard(props) {
             }
           >
             <Box component="span" sx={{ alignSelf: "center" }}>
-              <Button
+              <LoadingButton
                 disabled={!authorised}
                 variant="contained"
+                loading={btnLoading}
                 size="large"
                 onClick={() => {
-                  navigate({
-                    pathname: "/rates",
-                    search: createSearchParams({
-                      guests,
-                      checkin,
-                      checkout,
-                      roomid,
-                    }).toString(),
-                  });
+                  reserveRoomAndRedirect(
+                    roomid,
+                    checkin,
+                    checkout,
+                    guests,
+                    navigate,
+                    setBtnLoading
+                  );
                 }}
               >
                 Book from £{basePrice}/night
-              </Button>
+              </LoadingButton>
             </Box>
           </Tooltip>
         </Box>

@@ -10,22 +10,11 @@ import TitleWithProgress from "../components/TitleWithProgress";
 import BookingProgress from "../components/BookingProgress";
 
 // FUNCTIONS
-function getRatesForRoom(roomid, setRates) {
-  axios.get(`/rate/room/${roomid}`, null).then(
+function getBookingInfo(bookingID, setBooking) {
+  axios.get(`/booking/${bookingID}`).then(
     (response) => {
-      setRates(response.data);
-    },
-    (error) => {
-      console.log(error);
-    }
-  );
-}
-
-function getRoomInfo(roomid, setRoom) {
-  axios.get(`/room/${roomid}`, null).then(
-    (response) => {
-      console.log(response.data);
-      setRoom(response.data);
+      // success - store booking data in state
+      setBooking(response.data);
     },
     (error) => {
       console.log(error);
@@ -40,19 +29,15 @@ export default function Rates() {
 
   // get roomid from query params in url
   const [searchParams] = useSearchParams();
-  const roomid = searchParams.get("roomid");
+  const bookingid = searchParams.get("booking");
 
-  // state for rates
-  const [rates, setRates] = useState([]);
-
-  // state for room obj
-  const [room, setRoom] = useState();
+  // state for booking
+  const [booking, setBooking] = useState();
 
   useEffect(() => {
     // query rates for room if not null
-    if (roomid !== null) {
-      getRatesForRoom(roomid, setRates);
-      getRoomInfo(roomid, setRoom);
+    if (bookingid !== null) {
+      getBookingInfo(bookingid, setBooking);
     } else {
       // display error
       console.log("error");
@@ -67,14 +52,14 @@ export default function Rates() {
         <Box sx={{ display: "flex", gap: "100px" }}>
           <Box sx={{ flex: "2" }}>
             <Stack spacing={2}>
-              {room &&
-                rates.map((rate) => (
+              {booking &&
+                booking.rates.map((rate) => (
                   <RateCard
                     key={rate.id}
                     rate={rate.name}
                     description={rate.description}
                     ppn={rate.multiplier}
-                    roomBasePrice={room.basePrice}
+                    roomBasePrice={booking.room.basePrice}
                   />
                 ))}
             </Stack>
