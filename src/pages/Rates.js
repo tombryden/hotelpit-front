@@ -69,6 +69,8 @@ export default function Rates() {
                     ppn={rate.multiplier}
                     roomBasePrice={booking.room.basePrice}
                     nights={booking.nights}
+                    bookingid={booking.id}
+                    rateid={rate.id}
                   />
                 ))}
             </Stack>

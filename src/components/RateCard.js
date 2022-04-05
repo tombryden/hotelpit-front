@@ -1,17 +1,50 @@
-import { Button, Card, Typography } from "@mui/material";
+import { Card, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import PropTypes from "prop-types";
-import { useNavigate } from "react-router-dom";
+import { createSearchParams, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { useState } from "react";
+import { LoadingButton } from "@mui/lab";
+
+// FUNCTIONS
+function addRateToBookingAndRedirect(
+  bookingid,
+  rateid,
+  navigate,
+  setBtnLoading
+) {
+  setBtnLoading(true);
+
+  axios.patch(`/booking/${bookingid}/rate`, null, { params: { rateid } }).then(
+    () => {
+      // successfully added rate to booking.. redirect to payment page
+      navigate({
+        pathname: "/payment",
+        search: createSearchParams({
+          booking: bookingid,
+        }).toString(),
+      });
+    },
+    (error) => {
+      setBtnLoading(false);
+      console.log(error);
+    }
+  );
+}
 
 export default function RateCard(props) {
   // ppn = price per night
-  const { rate, description, ppn, roomBasePrice, nights } = props;
+  const { rate, description, ppn, roomBasePrice, nights, bookingid, rateid } =
+    props;
 
   const finalPricePerNight = (roomBasePrice * ppn).toFixed(2);
 
   const finalPriceTotal = finalPricePerNight * nights;
 
   const navigate = useNavigate();
+
+  // state for button loading
+  const [btnLoading, setBtnLoading] = useState(false);
 
   return (
     <Card>
@@ -38,14 +71,20 @@ export default function RateCard(props) {
             total
           </Typography>
 
-          <Button
+          <LoadingButton
             variant="contained"
+            loading={btnLoading}
             onClick={() => {
-              navigate("/payment");
+              addRateToBookingAndRedirect(
+                bookingid,
+                rateid,
+                navigate,
+                setBtnLoading
+              );
             }}
           >
             Book for £{finalPriceTotal}
-          </Button>
+          </LoadingButton>
         </Box>
       </Box>
     </Card>
@@ -59,6 +98,8 @@ RateCard.propTypes = {
   ppn: PropTypes.number,
   roomBasePrice: PropTypes.string,
   nights: PropTypes.number,
+  bookingid: PropTypes.number.isRequired,
+  rateid: PropTypes.number.isRequired,
 };
 
 RateCard.defaultProps = {
