@@ -6,7 +6,8 @@ import axios from "axios";
 function setRemainingReservationTime(
   reservationEndDate,
   setReservationCountdown,
-  setReservationCountdownFormatted
+  setReservationCountdownFormatted,
+  getReservationIfExists
 ) {
   const currentDate = new Date();
   const unixDiff =
@@ -17,6 +18,12 @@ function setRemainingReservationTime(
   const mins = dateDiff.getMinutes();
   const secs = dateDiff.getSeconds();
   const differenceString = `${mins} minutes ${secs} seconds`;
+
+  // if minutes are above 10 (then time will have reversed as minus minute cant occur), expired so refresh to double check
+  if (mins > 10) {
+    getReservationIfExists();
+    return;
+  }
 
   setReservationCountdown(unixDiff);
   setReservationCountdownFormatted(differenceString);
@@ -68,7 +75,8 @@ export default function useReservation() {
     setRemainingReservationTime(
       reservationEndDate,
       setReservationCountdown,
-      setReservationCountdownFormatted
+      setReservationCountdownFormatted,
+      getReservationIfExists
     );
 
     // create 1 second interval to countdown
@@ -77,7 +85,8 @@ export default function useReservation() {
       setRemainingReservationTime(
         reservationEndDate,
         setReservationCountdown,
-        setReservationCountdownFormatted
+        setReservationCountdownFormatted,
+        getReservationIfExists
       );
     }, 1000);
 
