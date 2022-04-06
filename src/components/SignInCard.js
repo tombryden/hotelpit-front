@@ -7,7 +7,13 @@ import { useState } from "react";
 import LoginIcon from "@mui/icons-material/Login";
 
 // FUNCTIONS
-function signIn(username, password, setBtnLoading, refreshAuthentication) {
+function signIn(
+  username,
+  password,
+  setBtnLoading,
+  refreshAuthentication,
+  getReservationIfExists
+) {
   setBtnLoading(true);
 
   axios
@@ -19,8 +25,9 @@ function signIn(username, password, setBtnLoading, refreshAuthentication) {
         if (response.data.message === "Credentials incorrect") {
           // invalid login
         } else {
-          // login successful refresh authentication
+          // login successful refresh authentication and get if any reservations exist
           refreshAuthentication();
+          getReservationIfExists();
         }
       },
       (error) => {
@@ -33,7 +40,7 @@ function signIn(username, password, setBtnLoading, refreshAuthentication) {
 }
 
 export default function SignInCard(props) {
-  const { visible, refreshAuthentication } = props;
+  const { visible, refreshAuthentication, getReservationIfExists } = props;
 
   // state for text input
   const [username, setUsername] = useState("");
@@ -77,7 +84,8 @@ export default function SignInCard(props) {
                   username,
                   password,
                   setBtnLoading,
-                  refreshAuthentication
+                  refreshAuthentication,
+                  getReservationIfExists
                 );
               }}
               loading={btnLoading}
@@ -97,6 +105,7 @@ export default function SignInCard(props) {
 SignInCard.propTypes = {
   visible: PropTypes.bool,
   refreshAuthentication: PropTypes.func.isRequired,
+  getReservationIfExists: PropTypes.func.isRequired,
 };
 
 SignInCard.defaultProps = {

@@ -5,19 +5,15 @@ export default function useAuthentication() {
   // state for authorisation status
   const [authorised, setAuthorised] = useState(false);
 
-  // logout function
-  function logout() {
-    axios.post("/user/logout").then(
-      () => {
-        // success
-        setAuthorised(false);
-        console.log("set authorised state to false");
-      },
-      () => {
-        // error - make them unauthorised anyway
-        setAuthorised(false);
-      }
-    );
+  // logout function - await result for reservation refresh
+  async function logout() {
+    try {
+      await axios.post("/user/logout");
+      setAuthorised(false);
+    } catch (error) {
+      console.log(error);
+      setAuthorised(false);
+    }
   }
 
   // check authentication
