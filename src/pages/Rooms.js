@@ -83,7 +83,12 @@ export default function Rooms() {
       </Snackbar>
 
       <Container maxWidth="false" sx={{ paddingTop: "64px" }}>
-        <TitleWithProgress title="Choose a room" progress={33} mt={2} mb={2} />
+        <TitleWithProgress
+          title="Step 1/3: Choose a room"
+          progress={33}
+          mt={2}
+          mb={2}
+        />
 
         <Grid container spacing={2}>
           {rooms.map((room) => (

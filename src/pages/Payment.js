@@ -57,7 +57,7 @@ export default function Payment() {
         refreshAuthentication={refreshAuthentication}
       />
       <Container maxWidth="false" sx={{ paddingTop: "64px" }}>
-        <TitleWithProgress title="Payment" progress={100} />
+        <TitleWithProgress title="Step 3/3: Payment" progress={100} />
 
         <Typography variant="h6" component="h2">
           Ultimate Duluxe Suite | Flexible | 2nd June - 5th June

@@ -56,7 +56,7 @@ export default function Rates() {
         refreshAuthentication={refreshAuthentication}
       />
       <Container maxWidth="false" sx={{ paddingTop: "64px" }}>
-        <TitleWithProgress title="Choose a rate" progress={66} />
+        <TitleWithProgress title="Step 2/3: Choose a rate" progress={66} />
         <Box sx={{ display: "flex", gap: "100px" }}>
           <Box sx={{ flex: "2" }}>
             <Stack spacing={2}>
