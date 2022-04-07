@@ -5,6 +5,7 @@ import {
   IconButton,
   Menu,
   MenuItem,
+  Modal,
   Toolbar,
   Tooltip,
   Typography,
@@ -15,6 +16,7 @@ import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import SignInCard from "./SignInCard";
 import useReservation from "../hooks/useReservation";
+import ModalBookings from "./ModalBookings";
 
 export default function Navbar(props) {
   const navigate = useNavigate();
@@ -32,87 +34,111 @@ export default function Navbar(props) {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
 
+  // state for backdrop
+  const [modelOpen, setModelOpen] = useState(false);
+
   return (
-    <AppBar position="fixed">
-      <Toolbar sx={{ justifyContent: "space-between" }}>
-        <Typography
-          variant="h6"
-          component="span"
-          onClick={() => {
-            navigate("/");
-          }}
-        >
-          HotelPit
-        </Typography>
+    <>
+      {/* modal - overlay for account menu stuff */}
+      <Modal
+        sx={{ padding: "80px", zIndex: "999999" }}
+        p={2}
+        open={modelOpen}
+        onClose={() => {
+          setModelOpen(false);
+        }}
+      >
+        <ModalBookings />
+      </Modal>
 
-        <Tooltip title="Return to booking reservation">
-          <Typography sx={{ cursor: "pointer" }}>
-            {reservationRemaining && `Reservation: ${reservationRemaining}`}
+      <AppBar position="fixed">
+        <Toolbar sx={{ justifyContent: "space-between" }}>
+          <Typography
+            variant="h6"
+            component="span"
+            onClick={() => {
+              navigate("/");
+            }}
+          >
+            HotelPit
           </Typography>
-        </Tooltip>
 
-        <Box>
-          {!authorised ? (
-            <>
-              <Typography
-                sx={{ cursor: "pointer" }}
-                component="span"
-                onClick={() => {
-                  // set sign in card visible to opposite of current state
-                  setSignVisible(!signVisible);
-                }}
-              >
-                Sign In
-              </Typography>
-              <SignInCard
-                visible={signVisible}
-                refreshAuthentication={refreshAuthentication}
-                getReservationIfExists={getReservationIfExists}
-              />
-            </>
-          ) : (
-            <>
-              <Tooltip title="Your account">
-                <IconButton
-                  aria-controls={open ? "basic-menu" : undefined}
-                  aria-haspopup="true"
-                  aria-expanded={open ? "true" : undefined}
-                  onClick={(e) => {
-                    setAnchorEl(e.currentTarget);
+          <Tooltip title="Return to booking reservation">
+            <Typography sx={{ cursor: "pointer" }}>
+              {reservationRemaining && `Reservation: ${reservationRemaining}`}
+            </Typography>
+          </Tooltip>
+
+          <Box>
+            {!authorised ? (
+              <>
+                <Typography
+                  sx={{ cursor: "pointer" }}
+                  component="span"
+                  onClick={() => {
+                    // set sign in card visible to opposite of current state
+                    setSignVisible(!signVisible);
                   }}
                 >
-                  <Avatar>T</Avatar>
-                </IconButton>
-              </Tooltip>
+                  Sign In
+                </Typography>
+                <SignInCard
+                  visible={signVisible}
+                  refreshAuthentication={refreshAuthentication}
+                  getReservationIfExists={getReservationIfExists}
+                />
+              </>
+            ) : (
+              <>
+                <Tooltip title="Your account">
+                  <IconButton
+                    aria-controls={open ? "basic-menu" : undefined}
+                    aria-haspopup="true"
+                    aria-expanded={open ? "true" : undefined}
+                    onClick={(e) => {
+                      setAnchorEl(e.currentTarget);
+                    }}
+                  >
+                    <Avatar>T</Avatar>
+                  </IconButton>
+                </Tooltip>
 
-              <Menu
-                anchorEl={anchorEl}
-                open={open}
-                onClose={() => {
-                  setAnchorEl(null);
-                }}
-                MenuListProps={{
-                  "aria-labelledby": "basic-button",
-                }}
-              >
-                <MenuItem>Profile</MenuItem>
-                <MenuItem>Bookings</MenuItem>
-                <Divider />
-                <MenuItem
-                  onClick={async () => {
+                <Menu
+                  anchorEl={anchorEl}
+                  open={open}
+                  onClose={() => {
                     setAnchorEl(null);
-                    await logout();
-                    getReservationIfExists();
+                  }}
+                  MenuListProps={{
+                    "aria-labelledby": "basic-button",
                   }}
                 >
-                  Logout
-                </MenuItem>
-              </Menu>
-            </>
-          )}
-        </Box>
-      </Toolbar>
-    </AppBar>
+                  <MenuItem>Profile</MenuItem>
+                  <MenuItem
+                    onClick={() => {
+                      setAnchorEl(null);
+                      setModelOpen(true);
+                    }}
+                  >
+                    Bookings
+                  </MenuItem>
+                  <Divider />
+                  <MenuItem
+                    onClick={async () => {
+                      setAnchorEl(null);
+                      await logout();
+                      getReservationIfExists();
+                    }}
+                  >
+                    Logout
+                  </MenuItem>
+                </Menu>
+              </>
+            )}
+          </Box>
+        </Toolbar>
+      </AppBar>
+    </>
   );
 }
 
