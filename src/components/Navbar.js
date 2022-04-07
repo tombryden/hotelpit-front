@@ -12,11 +12,39 @@ import {
 } from "@mui/material";
 import { Box } from "@mui/system";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { createSearchParams, useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
+import axios from "axios";
 import SignInCard from "./SignInCard";
 import useReservation from "../hooks/useReservation";
 import ModalBookings from "./ModalBookings";
+
+function redirectToReservation(navigate, getReservationIfExists) {
+  // get user current reservation, check if rate is null.. if it is, redirect to rate page.. if not null, redirect to payment page
+  axios.get("/user/reservation").then(
+    (response) => {
+      if (response.data.rate) {
+        navigate({
+          pathname: "/payment",
+          search: createSearchParams({
+            booking: response.data.id,
+          }).toString(),
+        });
+      } else {
+        navigate({
+          pathname: "/rates",
+          search: createSearchParams({
+            booking: response.data.id,
+          }).toString(),
+        });
+      }
+    },
+    () => {
+      // no reservation found.. reffresh reservation info
+      getReservationIfExists();
+    }
+  );
+}
 
 export default function Navbar(props) {
   const navigate = useNavigate();
@@ -64,7 +92,13 @@ export default function Navbar(props) {
           </Typography>
 
           <Tooltip title="Return to booking reservation">
-            <Typography sx={{ cursor: "pointer" }}>
+            <Typography
+              sx={{ cursor: "pointer" }}
+              component="span"
+              onClick={() => {
+                redirectToReservation(navigate, getReservationIfExists);
+              }}
+            >
               {reservationRemaining && `Reservation: ${reservationRemaining}`}
             </Typography>
           </Tooltip>
