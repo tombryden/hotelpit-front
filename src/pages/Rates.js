@@ -1,6 +1,6 @@
 import { Container, Stack } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import axios from "axios";
 import { Box } from "@mui/system";
 
@@ -11,7 +11,7 @@ import BookingProgress from "../components/BookingProgress";
 import useAuthentication from "../hooks/useAuthentication";
 
 // FUNCTIONS
-function getBookingInfo(bookingID, setBooking) {
+export function getBookingInfo(bookingID, setBooking) {
   axios.get(`/booking/${bookingID}`).then(
     (response) => {
       // success - store booking data in state
@@ -37,6 +37,9 @@ export default function Rates() {
 
   // authentication hook
   const [authorised, logout, refreshAuthentication] = useAuthentication();
+
+  // navigate hook
+  const navigate = useNavigate();
 
   useEffect(() => {
     // query rates for room if not null
@@ -77,7 +80,15 @@ export default function Rates() {
           </Box>
 
           <Box sx={{ flex: "1" }}>
-            <BookingProgress />
+            {booking && (
+              <BookingProgress
+                room={booking.room.name}
+                checkin={booking.checkInDate}
+                checkout={booking.checkOutDate}
+                navigate={navigate}
+                guests={booking.totalGuests}
+              />
+            )}
           </Box>
         </Box>
       </Container>

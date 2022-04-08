@@ -2,13 +2,15 @@ import { Card, Container, Stack, TextField, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import PaymentTwoToneIcon from "@mui/icons-material/PaymentTwoTone";
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { LoadingButton } from "@mui/lab";
 
 import Navbar from "../components/Navbar";
 import TitleWithProgress from "../components/TitleWithProgress";
 import useAuthentication from "../hooks/useAuthentication";
+import BookingProgress from "../components/BookingProgress";
+import { getBookingInfo } from "./Rates";
 
 function payAndConfirmReservation(
   cardNumber,
@@ -49,6 +51,14 @@ export default function Payment() {
   // state for pay button loading
   const [btnLoading, setBtnLoading] = useState(false);
 
+  // state for booking info
+  const [booking, setBooking] = useState();
+
+  // on mount get booking info for progress
+  useEffect(() => {
+    getBookingInfo(bookingid, setBooking);
+  }, []);
+
   return (
     <>
       <Navbar
@@ -59,58 +69,71 @@ export default function Payment() {
       <Container maxWidth="false" sx={{ paddingTop: "64px" }}>
         <TitleWithProgress title="Step 3/3: Payment" progress={100} />
 
-        <Typography variant="h6" component="h2">
-          Ultimate Duluxe Suite | Flexible | 2nd June - 5th June
-        </Typography>
+        <Box sx={{ display: "flex", gap: "100px" }}>
+          <Card sx={{ flex: 2, height: "100%" }}>
+            <Box p={2}>
+              <Typography mb={2}>
+                <PaymentTwoToneIcon sx={{ position: "relative", top: "5px" }} />
+                <strong>Payment</strong>
+              </Typography>
 
-        <Card sx={{ width: "50%" }}>
-          <Box p={2}>
-            <Typography mb={2}>
-              <PaymentTwoToneIcon sx={{ position: "relative", top: "5px" }} />
-              <strong>Payment</strong>
-            </Typography>
+              <Stack spacing={2}>
+                <TextField
+                  label="Card number"
+                  onChange={(e) => {
+                    setCard(e.target.value);
+                  }}
+                  value={card}
+                />
+                <TextField
+                  label="Exp MM"
+                  onChange={(e) => {
+                    setExpM(e.target.value);
+                  }}
+                  value={expM}
+                />
+                <TextField
+                  label="Exp YY"
+                  onChange={(e) => {
+                    setExpY(e.target.value);
+                  }}
+                  value={expY}
+                />
+                <LoadingButton
+                  loading={btnLoading}
+                  variant="contained"
+                  onClick={() => {
+                    payAndConfirmReservation(
+                      card,
+                      expM,
+                      expY,
+                      bookingid,
+                      setBtnLoading,
+                      navigate
+                    );
+                  }}
+                >
+                  Pay Now
+                </LoadingButton>
+              </Stack>
+            </Box>
+          </Card>
 
-            <Stack spacing={2}>
-              <TextField
-                label="Card number"
-                onChange={(e) => {
-                  setCard(e.target.value);
-                }}
-                value={card}
+          <Box sx={{ flex: 1 }}>
+            {booking && (
+              <BookingProgress
+                room={booking.room.name}
+                checkin={booking.checkInDate}
+                checkout={booking.checkOutDate}
+                rate={booking.rate ? booking.rate.name : null}
+                price={booking.totalPrice}
+                navigate={navigate}
+                bookingid={bookingid}
+                guests={booking.totalGuests}
               />
-              <TextField
-                label="Exp MM"
-                onChange={(e) => {
-                  setExpM(e.target.value);
-                }}
-                value={expM}
-              />
-              <TextField
-                label="Exp YY"
-                onChange={(e) => {
-                  setExpY(e.target.value);
-                }}
-                value={expY}
-              />
-              <LoadingButton
-                loading={btnLoading}
-                variant="contained"
-                onClick={() => {
-                  payAndConfirmReservation(
-                    card,
-                    expM,
-                    expY,
-                    bookingid,
-                    setBtnLoading,
-                    navigate
-                  );
-                }}
-              >
-                Pay Now
-              </LoadingButton>
-            </Stack>
+            )}
           </Box>
-        </Card>
+        </Box>
       </Container>
     </>
   );
