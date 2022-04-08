@@ -18,6 +18,7 @@ import axios from "axios";
 import SignInCard from "./SignInCard";
 import useReservation from "../hooks/useReservation";
 import ModalBookings from "./ModalBookings";
+import ModalDefects from "./ModalDefects";
 
 function redirectToReservation(navigate, getReservationIfExists) {
   // get user current reservation, check if rate is null.. if it is, redirect to rate page.. if not null, redirect to payment page
@@ -63,7 +64,7 @@ export default function Navbar(props) {
   const open = Boolean(anchorEl);
 
   // state for backdrop
-  const [modelOpen, setModelOpen] = useState(false);
+  const [modalOpen, setModalOpen] = useState({ modal: "none", open: false });
 
   return (
     <>
@@ -71,12 +72,15 @@ export default function Navbar(props) {
       <Modal
         sx={{ padding: "80px", zIndex: "999999" }}
         p={2}
-        open={modelOpen}
+        open={modalOpen.open}
         onClose={() => {
-          setModelOpen(false);
+          setModalOpen({ modal: "none", open: false });
         }}
       >
-        <ModalBookings />
+        <>
+          {modalOpen.modal === "bookings" && <ModalBookings />}
+          {modalOpen.modal === "defects" && <ModalDefects />}
+        </>
       </Modal>
 
       <AppBar position="fixed">
@@ -147,11 +151,19 @@ export default function Navbar(props) {
                     "aria-labelledby": "basic-button",
                   }}
                 >
-                  <MenuItem>Profile</MenuItem>
                   <MenuItem
                     onClick={() => {
                       setAnchorEl(null);
-                      setModelOpen(true);
+                      setModalOpen({ modal: "defects", open: true });
+                    }}
+                  >
+                    Defects
+                  </MenuItem>
+                  <Divider />
+                  <MenuItem
+                    onClick={() => {
+                      setAnchorEl(null);
+                      setModalOpen({ modal: "bookings", open: true });
                     }}
                   >
                     Bookings

@@ -7,6 +7,7 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
+import { Box } from "@mui/system";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
@@ -35,50 +36,52 @@ export default function ModalBookings() {
 
   return (
     <ModalCardContent>
-      <Typography variant="h4" component="h1" mb={1}>
-        Bookings
-      </Typography>
+      <Box>
+        <Typography variant="h4" component="h1" mb={1}>
+          Bookings
+        </Typography>
 
-      <TableContainer sx={{ maxHeight: "90%" }}>
-        <Table stickyHeader>
-          {/* table header row */}
-          <TableHead>
-            <TableRow>
-              <TableCell>ID</TableCell>
-              <TableCell>Room</TableCell>
-              <TableCell>Rate</TableCell>
-              <TableCell>Check In</TableCell>
-              <TableCell>Check Out</TableCell>
-              <TableCell>Guests</TableCell>
-              <TableCell>Status</TableCell>
-              <TableCell>Price</TableCell>
-            </TableRow>
-          </TableHead>
+        <TableContainer sx={{ maxHeight: "90%" }}>
+          <Table stickyHeader>
+            {/* table header row */}
+            <TableHead>
+              <TableRow>
+                <TableCell>ID</TableCell>
+                <TableCell>Room</TableCell>
+                <TableCell>Rate</TableCell>
+                <TableCell>Check In</TableCell>
+                <TableCell>Check Out</TableCell>
+                <TableCell>Guests</TableCell>
+                <TableCell>Status</TableCell>
+                <TableCell>Price</TableCell>
+              </TableRow>
+            </TableHead>
 
-          {/* table row content */}
-          <TableBody>
-            {bookings &&
-              bookings.map((booking) => (
-                <TableRow key={booking.id}>
-                  <TableCell component="th" scope="row">
-                    {booking.id}
-                  </TableCell>
-                  <TableCell>{booking.room.name}</TableCell>
-                  <TableCell>
-                    {booking.rate ? booking.rate.name : "N/A"}
-                  </TableCell>
-                  <TableCell>{booking.checkInDate}</TableCell>
-                  <TableCell>{booking.checkOutDate}</TableCell>
-                  <TableCell>{booking.totalGuests}</TableCell>
-                  <TableCell>{booking.status}</TableCell>
-                  <TableCell>
-                    {booking.totalPrice ? `£${booking.totalPrice}` : "N/A"}
-                  </TableCell>
-                </TableRow>
-              ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+            {/* table row content */}
+            <TableBody>
+              {bookings &&
+                bookings.map((booking) => (
+                  <TableRow key={booking.id}>
+                    <TableCell component="th" scope="row">
+                      {booking.id}
+                    </TableCell>
+                    <TableCell>{booking.room.name}</TableCell>
+                    <TableCell>
+                      {booking.rate ? booking.rate.name : "N/A"}
+                    </TableCell>
+                    <TableCell>{booking.checkInDate}</TableCell>
+                    <TableCell>{booking.checkOutDate}</TableCell>
+                    <TableCell>{booking.totalGuests}</TableCell>
+                    <TableCell>{booking.status}</TableCell>
+                    <TableCell>
+                      {booking.totalPrice ? `£${booking.totalPrice}` : "N/A"}
+                    </TableCell>
+                  </TableRow>
+                ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Box>
     </ModalCardContent>
   );
 
