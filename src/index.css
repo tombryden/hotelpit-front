@@ -14,3 +14,7 @@ html {
 .imgFit {
   object-fit: cover;
 }
+
+.MuiTooltip-popper {
+  z-index: 999999999 !important;
+}
