@@ -1,7 +1,8 @@
 import { Checkbox, FormControlLabel } from "@mui/material";
 import PropTypes from "prop-types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Cookies from "universal-cookie";
+import useDefectCookie from "../hooks/useDefectCookie";
 // import axios from "axios";
 
 function addDefectToCookie(defectCookie, cookies, add) {
@@ -31,7 +32,7 @@ function addDefectToCookie(defectCookie, cookies, add) {
     console.log(jsonArr);
 
     // stringify json and set cookie
-    cookies.set("defects", jsonArr, { path: "/" });
+    cookies.set("defects", jsonArr, { path: "/", maxAge: 2147483647 });
   } else {
     // no defects currently, new list needed
     const defectArr = [defectCookie];
@@ -41,7 +42,7 @@ function addDefectToCookie(defectCookie, cookies, add) {
     console.log(jsonArr);
 
     // stingify json and set cookie
-    cookies.set("defects", jsonArr, { path: "/" });
+    cookies.set("defects", jsonArr, { path: "/", maxAge: 2147483647 });
   }
 }
 
@@ -52,6 +53,9 @@ export default function DefectCheckbox(props) {
   // cookies
   const cookies = new Cookies();
 
+  // cookie hook
+  const containsDefect = useDefectCookie();
+
   // state for checkbox
   const [checked, setChecked] = useState(false);
 
@@ -61,6 +65,12 @@ export default function DefectCheckbox(props) {
 
     addDefectToCookie(cookie, cookies, event.target.checked);
   }
+
+  // on comp mount (cookie change) check if current cookie is already in cookies
+  // if true then set to checked
+  useEffect(() => {
+    if (containsDefect(cookie)) setChecked(true);
+  }, [cookie]);
 
   return (
     <FormControlLabel

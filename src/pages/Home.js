@@ -10,6 +10,7 @@ import { createSearchParams, useNavigate } from "react-router-dom";
 import HomeImg from "../images/home.jpg";
 import Navbar from "../components/Navbar";
 import useAuthentication from "../hooks/useAuthentication";
+import useDefectCookie from "../hooks/useDefectCookie";
 
 const guestNums = [
   {
@@ -60,6 +61,9 @@ function Home() {
 
   // authentication hook
   const [authorised, logout, refreshAuthentication] = useAuthentication();
+
+  // cookies hook
+  const containsDefect = useDefectCookie();
 
   return (
     <>
@@ -132,6 +136,10 @@ function Home() {
                 sx={{ width: "200px" }}
                 variant="contained"
                 onClick={() => {
+                  // check if defect cookies contains searchNotWorking
+                  // console.log(containsDefect("searchNotWorking"));
+                  if (containsDefect("searchNotWorking")) return;
+
                   navigate({
                     pathname: "/rooms",
                     search: createSearchParams({
