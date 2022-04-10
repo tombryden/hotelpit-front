@@ -18,7 +18,7 @@ export default function DefectCheckboxes(props) {
       {defects.map((defect) => (
         <Tooltip key={defect.id} title={defect.helper} placement="right">
           <Box>
-            <DefectCheckbox defectid={defect.id} label={defect.title} />
+            <DefectCheckbox label={defect.title} cookie={defect.cookie} />
           </Box>
         </Tooltip>
       ))}
