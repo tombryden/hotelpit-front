@@ -1,4 +1,11 @@
-import { Alert, Container, Grid, Snackbar } from "@mui/material";
+import {
+  Alert,
+  CircularProgress,
+  Container,
+  Grid,
+  Snackbar,
+} from "@mui/material";
+import { Box } from "@mui/system";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
@@ -9,15 +16,21 @@ import TitleWithProgress from "../components/TitleWithProgress";
 import useAuthentication from "../hooks/useAuthentication";
 
 // FUNCTIONS
-function getAllRooms(setRooms, guests, checkin, checkout) {
-  axios.get("/room", { params: { guests, checkin, checkout } }).then(
-    (response) => {
-      setRooms(response.data);
-    },
-    (error) => {
-      console.log(error);
-    }
-  );
+function getAllRooms(setRooms, guests, checkin, checkout, setLoading) {
+  setLoading(true);
+  axios
+    .get("/room", { params: { guests, checkin, checkout } })
+    .then(
+      (response) => {
+        setRooms(response.data);
+      },
+      (error) => {
+        console.log(error);
+      }
+    )
+    .finally(() => {
+      setLoading(false);
+    });
 }
 
 function closeSnackbar(setSnackOpen, event, reason) {
@@ -29,6 +42,9 @@ function closeSnackbar(setSnackOpen, event, reason) {
 export default function Rooms() {
   // state for rooms
   const [rooms, setRooms] = useState([]);
+
+  // state for rooms loading
+  const [loading, setLoading] = useState(true);
 
   // get guests., checkin, checkout from query params in url
   const [searchParams] = useSearchParams();
@@ -45,7 +61,7 @@ export default function Rooms() {
   useEffect(() => {
     // query rates for room if not null
     if (guests !== null && checkin !== null && checkout !== null) {
-      getAllRooms(setRooms, guests, checkin, checkout);
+      getAllRooms(setRooms, guests, checkin, checkout, setLoading);
     } else {
       // display error
       console.log("error");
@@ -82,7 +98,12 @@ export default function Rooms() {
         </Alert>
       </Snackbar>
 
-      <Container maxWidth="false" sx={{ paddingTop: "64px" }}>
+      <Container
+        maxWidth="false"
+        sx={{
+          paddingTop: "64px",
+        }}
+      >
         <TitleWithProgress
           title="Step 1/3: Choose a room"
           progress={33}
@@ -90,33 +111,32 @@ export default function Rooms() {
           mb={2}
         />
 
-        <Grid container spacing={2}>
-          {rooms.map((room) => (
-            <Grid item xl={3} key={room.id}>
-              <RoomCard
-                roomid={room.id}
-                name={room.name}
-                description={room.description}
-                basePrice={room.basePrice}
-                searchParams={searchParams}
-                authorised={authorised}
-              />
-            </Grid>
-          ))}
-
-          {/* <Grid item xl={3}>
-            <RoomCard />
+        {loading ? (
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+            }}
+            pt={2}
+          >
+            <CircularProgress />
+          </Box>
+        ) : (
+          <Grid container spacing={2}>
+            {rooms.map((room) => (
+              <Grid item xl={3} key={room.id}>
+                <RoomCard
+                  roomid={room.id}
+                  name={room.name}
+                  description={room.description}
+                  basePrice={room.basePrice}
+                  searchParams={searchParams}
+                  authorised={authorised}
+                />
+              </Grid>
+            ))}
           </Grid>
-          <Grid item xl={3}>
-            <RoomCard />
-          </Grid>
-          <Grid item xl={3}>
-            <RoomCard />
-          </Grid>
-          <Grid item xl={3}>
-            <RoomCard />
-          </Grid> */}
-        </Grid>
+        )}
       </Container>
     </>
   );
