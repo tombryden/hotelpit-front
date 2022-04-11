@@ -14,6 +14,15 @@ import Navbar from "../components/Navbar";
 import RoomCard from "../components/RoomCard";
 import TitleWithProgress from "../components/TitleWithProgress";
 import useAuthentication from "../hooks/useAuthentication";
+import useDefectCookie from "../hooks/useDefectCookie";
+
+// random misspelt titles
+const titles = [
+  "Step 1/3: Chose a rome",
+  "cHOOSE A ROOM",
+  "...",
+  "user will now select a room",
+];
 
 // FUNCTIONS
 function getAllRooms(setRooms, guests, checkin, checkout, setLoading) {
@@ -57,6 +66,9 @@ export default function Rooms() {
 
   // authentication hook
   const [authorised, logout, refreshAuthentication] = useAuthentication();
+
+  // defect cookies hook
+  const containsDefect = useDefectCookie();
 
   useEffect(() => {
     // query rates for room if not null
@@ -105,7 +117,11 @@ export default function Rooms() {
         }}
       >
         <TitleWithProgress
-          title="Step 1/3: Choose a room"
+          title={
+            !containsDefect("Rooms_TitleTypo")
+              ? "Step 1/3: Choose a room"
+              : titles[Math.floor(Math.random() * titles.length)]
+          }
           progress={33}
           mt={2}
           mb={2}

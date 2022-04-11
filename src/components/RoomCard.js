@@ -8,6 +8,7 @@ import axios from "axios";
 
 import HomeImg from "../images/home.jpg";
 import "../index.css";
+import useDefectCookie from "../hooks/useDefectCookie";
 
 // FUNCTIONS
 function reserveRoomAndRedirect(
@@ -58,6 +59,8 @@ function RoomCard(props) {
 
   const navigate = useNavigate();
 
+  const containsDefect = useDefectCookie();
+
   return (
     <Card>
       <Box>
@@ -78,10 +81,12 @@ function RoomCard(props) {
           }}
         >
           <Typography variant="h5" component="h1">
-            {name}
+            {containsDefect("Rooms_Mismatch") ? description : name}
           </Typography>
 
-          <Typography mb={2}>{description}</Typography>
+          <Typography mb={2}>
+            {containsDefect("Rooms_Mismatch") ? name : description}
+          </Typography>
 
           <Tooltip
             title={
@@ -91,24 +96,26 @@ function RoomCard(props) {
             }
           >
             <Box component="span" sx={{ alignSelf: "center" }}>
-              <LoadingButton
-                disabled={!authorised}
-                variant="contained"
-                loading={btnLoading}
-                size="large"
-                onClick={() => {
-                  reserveRoomAndRedirect(
-                    roomid,
-                    checkin,
-                    checkout,
-                    guests,
-                    navigate,
-                    setBtnLoading
-                  );
-                }}
-              >
-                Book from £{basePrice}/night
-              </LoadingButton>
+              {!containsDefect("Rooms_NoBook") && (
+                <LoadingButton
+                  disabled={!authorised}
+                  variant="contained"
+                  loading={btnLoading}
+                  size="large"
+                  onClick={() => {
+                    reserveRoomAndRedirect(
+                      roomid,
+                      checkin,
+                      checkout,
+                      guests,
+                      navigate,
+                      setBtnLoading
+                    );
+                  }}
+                >
+                  Book from £{basePrice}/night
+                </LoadingButton>
+              )}
             </Box>
           </Tooltip>
         </Box>

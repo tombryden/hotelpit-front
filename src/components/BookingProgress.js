@@ -2,6 +2,7 @@ import { Stack, Tooltip, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import PropTypes from "prop-types";
 import { createSearchParams } from "react-router-dom";
+import useDefectCookie from "../hooks/useDefectCookie";
 
 import HomeImg from "../images/home.jpg";
 import "../index.css";
@@ -35,6 +36,13 @@ export default function BookingProcess(props) {
   const { room, checkin, checkout, rate, price, bookingid, navigate, guests } =
     props;
 
+  // defect for final price
+  const containsDefect = useDefectCookie();
+
+  let finalPrice = parseFloat(price);
+  if (containsDefect("Payment_IncorrectPrice"))
+    finalPrice += Math.floor(Math.random() * 200) + 1;
+
   return (
     <Box>
       <img
@@ -60,7 +68,7 @@ export default function BookingProcess(props) {
             </Typography>
           </Tooltip>
           <Typography>Check in: {checkin}</Typography>
-          <Typography>Check in: {checkout}</Typography>
+          <Typography>Check out: {checkout}</Typography>
           {rate && (
             <Typography>
               Rate:{" "}
@@ -77,7 +85,7 @@ export default function BookingProcess(props) {
               </Tooltip>
             </Typography>
           )}
-          {price && <Typography>Price: £{price}</Typography>}
+          {price && <Typography>Price: £{finalPrice.toFixed(2)}</Typography>}
         </Stack>
       </Box>
     </Box>

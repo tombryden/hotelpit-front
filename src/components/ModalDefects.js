@@ -22,15 +22,55 @@ function getDefectsByCategoryAndPage(category, page, setDefects) {
 export default function ModalDefects() {
   // state for defects
   const [homeFunctionalDefects, setHomeFunctionalDefects] = useState();
+
   const [roomsNonFunctionalDefects, setRoomsNonFunctionalDefects] = useState();
+  const [roomsFunctionalDefects, setRoomsFunctionalDefects] = useState();
+
+  const [ratesFunctionalDefects, setRatesFunctionalDefects] = useState();
+  const [ratesNonFunctionalDefects, setRatesNonFunctionalDefects] = useState();
+
+  const [paymentFunctionalDefects, setPaymentFunctionalDefects] = useState();
+  const [paymentNonFunctionalDefects, setPaymentNonFunctionalDefects] =
+    useState();
 
   // on mount, load defects
   useEffect(() => {
     getDefectsByCategoryAndPage("FUNCTIONAL", "HOME", setHomeFunctionalDefects);
+
     getDefectsByCategoryAndPage(
       "NONFUNCTIONAL",
       "ROOMS",
       setRoomsNonFunctionalDefects
+    );
+
+    getDefectsByCategoryAndPage(
+      "FUNCTIONAL",
+      "ROOMS",
+      setRoomsFunctionalDefects
+    );
+
+    getDefectsByCategoryAndPage(
+      "FUNCTIONAL",
+      "RATES",
+      setRatesFunctionalDefects
+    );
+
+    getDefectsByCategoryAndPage(
+      "NONFUNCTIONAL",
+      "RATES",
+      setRatesNonFunctionalDefects
+    );
+
+    getDefectsByCategoryAndPage(
+      "FUNCTIONAL",
+      "PAYMENT",
+      setPaymentFunctionalDefects
+    );
+
+    getDefectsByCategoryAndPage(
+      "NONFUNCTIONAL",
+      "PAYMENT",
+      setPaymentNonFunctionalDefects
     );
   }, []);
 
@@ -53,6 +93,27 @@ export default function ModalDefects() {
           {homeFunctionalDefects && (
             <DefectCheckboxes defects={homeFunctionalDefects} />
           )}
+
+          <Typography variant="h5" component="p">
+            Rooms page defects
+          </Typography>
+          {roomsFunctionalDefects && (
+            <DefectCheckboxes defects={roomsFunctionalDefects} />
+          )}
+
+          <Typography variant="h5" component="p">
+            Rates page defects
+          </Typography>
+          {ratesFunctionalDefects && (
+            <DefectCheckboxes defects={ratesFunctionalDefects} />
+          )}
+
+          <Typography variant="h5" component="p">
+            Payment page defects
+          </Typography>
+          {paymentFunctionalDefects && (
+            <DefectCheckboxes defects={paymentFunctionalDefects} />
+          )}
         </Box>
 
         <Box sx={{ flex: 1 }} ml={2}>
@@ -69,6 +130,20 @@ export default function ModalDefects() {
           </Typography>
           {roomsNonFunctionalDefects && (
             <DefectCheckboxes defects={roomsNonFunctionalDefects} />
+          )}
+
+          <Typography variant="h5" component="p">
+            Rates page defects
+          </Typography>
+          {ratesNonFunctionalDefects && (
+            <DefectCheckboxes defects={ratesNonFunctionalDefects} />
+          )}
+
+          <Typography variant="h5" component="p">
+            Payment page defects
+          </Typography>
+          {paymentNonFunctionalDefects && (
+            <DefectCheckboxes defects={paymentNonFunctionalDefects} />
           )}
         </Box>
       </Box>

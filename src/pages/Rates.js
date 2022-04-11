@@ -72,7 +72,7 @@ export default function Rates() {
                     ppn={rate.multiplier}
                     roomBasePrice={booking.room.basePrice}
                     nights={booking.nights}
-                    bookingid={booking.id}
+                    bookingid={bookingid}
                     rateid={rate.id}
                   />
                 ))}

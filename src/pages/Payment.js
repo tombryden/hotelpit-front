@@ -37,9 +37,9 @@ export default function Payment() {
   const [authorised, logout, refreshAuthentication] = useAuthentication();
 
   // states for input
-  const [card, setCard] = useState();
-  const [expM, setExpM] = useState();
-  const [expY, setExpY] = useState();
+  const [card, setCard] = useState("");
+  const [expM, setExpM] = useState("");
+  const [expY, setExpY] = useState("");
 
   // get booking id from url
   const [searchParams] = useSearchParams();

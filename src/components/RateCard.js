@@ -5,6 +5,7 @@ import { createSearchParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useState } from "react";
 import { LoadingButton } from "@mui/lab";
+import useDefectCookie from "../hooks/useDefectCookie";
 
 // FUNCTIONS
 function addRateToBookingAndRedirect(
@@ -39,7 +40,14 @@ export default function RateCard(props) {
 
   const finalPricePerNight = (roomBasePrice * ppn).toFixed(2);
 
-  const finalPriceTotal = finalPricePerNight * nights;
+  let finalPriceTotal = finalPricePerNight * nights;
+
+  // defect cookie hook
+  const containsDefect = useDefectCookie();
+  // if there is rate calc defect then edit the total price
+  if (containsDefect("Rates_CalculationIncorrect")) {
+    finalPriceTotal += Math.floor(Math.random() * 200) + 1;
+  }
 
   const navigate = useNavigate();
 
@@ -98,7 +106,7 @@ RateCard.propTypes = {
   ppn: PropTypes.number,
   roomBasePrice: PropTypes.string,
   nights: PropTypes.number,
-  bookingid: PropTypes.number.isRequired,
+  bookingid: PropTypes.string.isRequired,
   rateid: PropTypes.number.isRequired,
 };
 
