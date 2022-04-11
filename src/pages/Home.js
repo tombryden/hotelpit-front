@@ -111,6 +111,7 @@ function Home() {
                 inputFormat="DD/MM/YYYY"
                 value={checkOut}
                 onChange={(val) => {
+                  if (containsDefect("checkoutNotWorking")) return;
                   setCheckOut(val);
                 }}
                 renderInput={(params) => <TextField fullWidth {...params} />}
@@ -122,6 +123,7 @@ function Home() {
                 select
                 value={guests}
                 onChange={(event) => {
+                  if (containsDefect("guestSelector")) return;
                   setGuests(event.target.value);
                 }}
               >
