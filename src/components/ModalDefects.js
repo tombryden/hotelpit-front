@@ -22,10 +22,16 @@ function getDefectsByCategoryAndPage(category, page, setDefects) {
 export default function ModalDefects() {
   // state for defects
   const [homeFunctionalDefects, setHomeFunctionalDefects] = useState();
+  const [roomsNonFunctionalDefects, setRoomsNonFunctionalDefects] = useState();
 
   // on mount, load defects
   useEffect(() => {
     getDefectsByCategoryAndPage("FUNCTIONAL", "HOME", setHomeFunctionalDefects);
+    getDefectsByCategoryAndPage(
+      "NONFUNCTIONAL",
+      "ROOMS",
+      setRoomsNonFunctionalDefects
+    );
   }, []);
 
   return (
@@ -49,10 +55,21 @@ export default function ModalDefects() {
           )}
         </Box>
 
-        <Box sx={{ flex: 1 }}>
+        <Box sx={{ flex: 1 }} ml={2}>
           <Typography variant="h4" component="h2" mb={1} align="center">
             <u>Non-Functional Defects</u>
           </Typography>
+
+          <Typography variant="h5" component="p">
+            Home page defects
+          </Typography>
+
+          <Typography variant="h5" component="p">
+            Rooms page defects
+          </Typography>
+          {roomsNonFunctionalDefects && (
+            <DefectCheckboxes defects={roomsNonFunctionalDefects} />
+          )}
         </Box>
       </Box>
     </ModalCardContent>
