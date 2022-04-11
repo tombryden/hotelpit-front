@@ -111,7 +111,7 @@ function Home() {
                 inputFormat="DD/MM/YYYY"
                 value={checkOut}
                 onChange={(val) => {
-                  if (containsDefect("checkoutNotWorking")) return;
+                  if (containsDefect("Home_Checkout")) return;
                   setCheckOut(val);
                 }}
                 renderInput={(params) => <TextField fullWidth {...params} />}
@@ -123,7 +123,7 @@ function Home() {
                 select
                 value={guests}
                 onChange={(event) => {
-                  if (containsDefect("guestSelector")) return;
+                  if (containsDefect("Home_GuestSelector")) return;
                   setGuests(event.target.value);
                 }}
               >
@@ -140,7 +140,7 @@ function Home() {
                 onClick={() => {
                   // check if defect cookies contains searchNotWorking
                   // console.log(containsDefect("searchNotWorking"));
-                  if (containsDefect("searchNotWorking")) return;
+                  if (containsDefect("Home_Search")) return;
 
                   navigate({
                     pathname: "/rooms",
