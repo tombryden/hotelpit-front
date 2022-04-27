@@ -122,10 +122,6 @@ export default function ModalDefects() {
           </Typography>
 
           <Typography variant="h5" component="p">
-            Home page defects
-          </Typography>
-
-          <Typography variant="h5" component="p">
             Rooms page defects
           </Typography>
           {roomsNonFunctionalDefects && (

@@ -12,7 +12,8 @@ function signIn(
   password,
   setBtnLoading,
   refreshAuthentication,
-  getReservationIfExists
+  getReservationIfExists,
+  setLoginError
 ) {
   setBtnLoading(true);
 
@@ -21,17 +22,18 @@ function signIn(
     .then(
       (response) => {
         // success user authenticated
-        console.log(response.data);
         if (response.data.message === "Credentials incorrect") {
           // invalid login
+          setLoginError(true);
         } else {
           // login successful refresh authentication and get if any reservations exist
           refreshAuthentication();
           getReservationIfExists();
         }
       },
-      (error) => {
-        console.log(error);
+      () => {
+        // error
+        setLoginError(true);
       }
     )
     .finally(() => {
@@ -48,6 +50,9 @@ export default function SignInCard(props) {
 
   // state for button loading
   const [btnLoading, setBtnLoading] = useState(false);
+
+  // state for input error on username
+  const [loginError, setLoginError] = useState(false);
 
   return (
     <Box>
@@ -66,14 +71,18 @@ export default function SignInCard(props) {
               label="Username"
               value={username}
               onChange={(e) => {
+                setLoginError(false);
                 setUsername(e.target.value);
               }}
+              error={loginError}
+              helperText={loginError && "Invalid username or password"}
             />
             <TextField
               label="Password"
               type="password"
               value={password}
               onChange={(e) => {
+                setLoginError(false);
                 setPassword(e.target.value);
               }}
             />
@@ -85,7 +94,8 @@ export default function SignInCard(props) {
                   password,
                   setBtnLoading,
                   refreshAuthentication,
-                  getReservationIfExists
+                  getReservationIfExists,
+                  setLoginError
                 );
               }}
               loading={btnLoading}

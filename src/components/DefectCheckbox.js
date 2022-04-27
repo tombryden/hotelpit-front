@@ -29,7 +29,6 @@ function addDefectToCookie(defectCookie, cookies, add) {
     }
 
     const jsonArr = JSON.stringify(defectArr);
-    console.log(jsonArr);
 
     // stringify json and set cookie
     cookies.set("defects", jsonArr, { path: "/", maxAge: 2147483647 });
@@ -38,8 +37,6 @@ function addDefectToCookie(defectCookie, cookies, add) {
     const defectArr = [defectCookie];
 
     const jsonArr = JSON.stringify(defectArr);
-
-    console.log(jsonArr);
 
     // stingify json and set cookie
     cookies.set("defects", jsonArr, { path: "/", maxAge: 2147483647 });

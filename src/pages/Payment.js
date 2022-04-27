@@ -18,7 +18,8 @@ function payAndConfirmReservation(
   expYear,
   bookingID,
   setBtnLoading,
-  navigate
+  navigate,
+  setPaymentFail
 ) {
   setBtnLoading(true);
   axios.post("/booking/pay", { cardNumber, expMonth, expYear, bookingID }).then(
@@ -26,9 +27,9 @@ function payAndConfirmReservation(
       // successfully confirmed booking - redirect to confirmation page
       navigate("/confirmation");
     },
-    (error) => {
+    () => {
       setBtnLoading(false);
-      console.log(error);
+      setPaymentFail(true);
     }
   );
 }
@@ -40,6 +41,7 @@ export default function Payment() {
   const [card, setCard] = useState("");
   const [expM, setExpM] = useState("");
   const [expY, setExpY] = useState("");
+  const [cvc, setCVC] = useState("");
 
   // get booking id from url
   const [searchParams] = useSearchParams();
@@ -53,6 +55,9 @@ export default function Payment() {
 
   // state for booking info
   const [booking, setBooking] = useState();
+
+  // state for payment fails
+  const [paymentFail, setPaymentFail] = useState(false);
 
   // on mount get booking info for progress
   useEffect(() => {
@@ -81,13 +86,19 @@ export default function Payment() {
                 <TextField
                   label="Card number"
                   onChange={(e) => {
+                    setPaymentFail(false);
                     setCard(e.target.value);
                   }}
                   value={card}
+                  error={paymentFail}
+                  helperText={
+                    paymentFail && "Payment failed. Please check card details"
+                  }
                 />
                 <TextField
                   label="Exp MM"
                   onChange={(e) => {
+                    setPaymentFail(false);
                     setExpM(e.target.value);
                   }}
                   value={expM}
@@ -95,9 +106,19 @@ export default function Payment() {
                 <TextField
                   label="Exp YY"
                   onChange={(e) => {
+                    setPaymentFail(false);
                     setExpY(e.target.value);
                   }}
                   value={expY}
+                />
+
+                <TextField
+                  label="CVC"
+                  onChange={(e) => {
+                    setPaymentFail(false);
+                    setCVC(e.target.value);
+                  }}
+                  value={cvc}
                 />
                 <LoadingButton
                   loading={btnLoading}
@@ -109,7 +130,8 @@ export default function Payment() {
                       expY,
                       bookingid,
                       setBtnLoading,
-                      navigate
+                      navigate,
+                      setPaymentFail
                     );
                   }}
                 >
